@@ -12,8 +12,7 @@ func main() {
 	v := vodka.New()
 	v.Use(middleware.Logger())
 	v.Use(middleware.Recover())
-	r := fempla.Renderor()
-	v.SetRenderer(r)
+	v.SetRenderer(fempla.Renderor())
 	v.Static("/static", "./static")
 	v.Get("/", func(ctx vodka.Context) error {
 		ctx.Render(200, "index.html", map[string]interface{}{
