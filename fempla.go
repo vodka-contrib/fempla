@@ -68,10 +68,10 @@ type FemplaOption struct {
 	Directory string
 	// Reload to reload templates everytime.
 	Reload bool
-	// Like this "{{"
-	Left string
-	// Like this "}}"
-	Right string
+	// LeftDelim "{{"
+	LeftDelim string
+	// RightDelim "}}"
+	RightDelim string
 }
 
 type Renderer struct {
@@ -88,11 +88,11 @@ func perparOption(options []FemplaOption) FemplaOption {
 	if len(opt.Directory) == 0 {
 		opt.Directory = "templates"
 	}
-	if len(opt.Left) == 0 {
-		opt.Left = "{{"
+	if len(opt.LeftDelim) == 0 {
+		opt.LeftDelim = "{{"
 	}
-	if len(opt.Right) == 0 {
-		opt.Right = "}}"
+	if len(opt.RightDelim) == 0 {
+		opt.RightDelim = "}}"
 	}
 	return opt
 }
@@ -111,7 +111,7 @@ func (r *Renderer) fromFile(path string) (t *femplate.Template, err error) {
 	if err != nil {
 		return nil, err
 	}
-	t = femplate.New(string(buf), r.FemplaOption.Left, r.FemplaOption.Right)
+	t = femplate.New(string(buf), r.FemplaOption.LeftDelim, r.FemplaOption.RightDelim)
 	return t, nil
 }
 
@@ -141,6 +141,7 @@ func (r *Renderer) getTemplate(name string) (t *femplate.Template, err error) {
 	return
 }
 
+/*
 func getContext(templateData interface{}) map[string]interface{} {
 	if templateData == nil {
 		return nil
@@ -151,13 +152,14 @@ func getContext(templateData interface{}) map[string]interface{} {
 	}
 	return nil
 }
+*/
 
-func (r *Renderer) Render(w io.Writer, name string, data interface{}, ctx vodka.Context) error {
+func (r *Renderer) Render(w io.Writer, name string, ctx vodka.Context) error {
 	template, err := r.getTemplate(name)
 	if err != nil {
 		return err
 	}
-	s := template.ExecuteString(getContext(data))
+	s := template.ExecuteString(ctx.GetStore())
 	//_, err = io.Copy(w, bytes.NewReader([]byte(s)))
 	_, err = fmt.Fprintf(w, "%s", s)
 	return err

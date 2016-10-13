@@ -24,8 +24,8 @@ func TestRenderHtml(t *testing.T) {
 		})
 		e.SetRenderer(r)
 		e.Get("/vodka", func() vodka.HandlerFunc {
-			return func(ctx vodka.Context) error {
-				return ctx.Render(http.StatusOK, "vodka.html", nil)
+			return func(self vodka.Context) error {
+				return self.Render(http.StatusOK, "vodka.html")
 			}
 		}())
 		status, body := request("GET", "/vodka", e)
@@ -41,8 +41,8 @@ func TestRenderHtml(t *testing.T) {
 		})
 		e.SetRenderer(r)
 		e.Get("/vodka", func() vodka.HandlerFunc {
-			return func(ctx vodka.Context) error {
-				return ctx.Render(http.StatusOK, "vodka.html", nil)
+			return func(self vodka.Context) error {
+				return self.Render(http.StatusOK, "vodka.html")
 			}
 		}())
 		status, body := request("GET", "/vodka", e)
@@ -57,10 +57,9 @@ func TestRenderHtml(t *testing.T) {
 		})
 		e.SetRenderer(r)
 		e.Get("/vodka", func() vodka.HandlerFunc {
-			return func(ctx vodka.Context) error {
-				return ctx.Render(http.StatusOK, "vodka_markup.html", map[string]interface{}{
-					"name": "vodka",
-				})
+			return func(self vodka.Context) error {
+				self.Set("name", "vodka")
+				return self.Render(http.StatusOK, "vodka_markup.html")
 			}
 		}())
 		status, body := request("GET", "/vodka", e)
@@ -71,17 +70,16 @@ func TestRenderHtml(t *testing.T) {
 	Convey("Render HTML with Context and Reload", t, func() {
 		e := vodka.New()
 		r := Renderor(FemplaOption{
-			Directory: "test",
-			Reload:    true,
-			Left:      "{{",
-			Right:     "}}",
+			Directory:  "test",
+			Reload:     true,
+			LeftDelim:  "{{",
+			RightDelim: "}}",
 		})
 		e.SetRenderer(r)
 		e.Get("/vodka", func() vodka.HandlerFunc {
-			return func(ctx vodka.Context) error {
-				return ctx.Render(http.StatusOK, "vodka_markup.html", map[string]interface{}{
-					"name": "vodka",
-				})
+			return func(self vodka.Context) error {
+				self.Set("name", "vodka")
+				return self.Render(http.StatusOK, "vodka_markup.html")
 			}
 		}())
 		status, body := request("GET", "/vodka", e)
@@ -95,12 +93,11 @@ func ExampleRender() {
 	r := Renderor()
 	e.SetRenderer(r)
 	e.Get("/", func() vodka.HandlerFunc {
-		return func(ctx vodka.Context) error {
+		return func(self vodka.Context) error {
+			self.Set("title", "你好，世界")
+
 			// render ./templates/index.html file.
-			ctx.Render(200, "index.html", map[string]interface{}{
-				"title": "你好，世界",
-			})
-			return nil
+			return self.Render(200, "index.html")
 		}
 	}())
 }

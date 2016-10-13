@@ -14,11 +14,14 @@ func main() {
 	v.Use(middleware.Recover())
 	v.SetRenderer(fempla.Renderor())
 	v.Static("/static", "./static")
-	v.Get("/", func(ctx vodka.Context) error {
-		ctx.Render(200, "index.html", map[string]interface{}{
-			"title": "你好，世界",
-		})
-		return nil
+	v.Get("/", func(self vodka.Context) error {
+		data := make(map[string]interface{})
+		data["oh"] = "no"
+		data["name"] = "Insion Ng"
+		self.Set("title", "你好，世界")
+		self.SetStore(data)
+		self.Set("oh", "yes")
+		return self.Render(200, "index.html")
 	})
 
 	v.Run(fasthttp.New(":9000"))
