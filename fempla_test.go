@@ -30,7 +30,7 @@ func TestRenderHtml(t *testing.T) {
 		}())
 		status, body := request("GET", "/vodka", e)
 		So(status, ShouldEqual, http.StatusOK)
-		So(body, ShouldEqual, "<h1>Hello vodka</h1>\n")
+		So(body, ShouldEqual, "<h1>Hello vodka</h1>")
 	})
 
 	Convey("Render HTML with Reload", t, func() {
@@ -47,7 +47,7 @@ func TestRenderHtml(t *testing.T) {
 		}())
 		status, body := request("GET", "/vodka", e)
 		So(status, ShouldEqual, http.StatusOK)
-		So(body, ShouldEqual, "<h1>Hello vodka</h1>\n")
+		So(body, ShouldEqual, "<h1>Hello vodka</h1>")
 	})
 
 	Convey("Render HTML with Context", t, func() {
@@ -64,7 +64,7 @@ func TestRenderHtml(t *testing.T) {
 		}())
 		status, body := request("GET", "/vodka", e)
 		So(status, ShouldEqual, http.StatusOK)
-		So(body, ShouldEqual, "<h1>Hello, vodka</h1>\n")
+		So(body, ShouldEqual, "<h1>Hello, vodka</h1>")
 	})
 
 	Convey("Render HTML with Context and Reload", t, func() {
@@ -84,7 +84,7 @@ func TestRenderHtml(t *testing.T) {
 		}())
 		status, body := request("GET", "/vodka", e)
 		So(status, ShouldEqual, http.StatusOK)
-		So(body, ShouldEqual, "<h1>Hello, vodka</h1>\n")
+		So(body, ShouldEqual, "<h1>Hello, vodka</h1>")
 	})
 }
 
